@@ -31,7 +31,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
         final String jwt = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        return ResponseEntity.ok(new JwtResponse(jwt, "Login successful"));
     }
 
     @PostMapping("/register")
