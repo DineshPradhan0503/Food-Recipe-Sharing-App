@@ -1,33 +1,13 @@
 package com.example.trendingservice.config;
 
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import redis.embedded.RedisServer;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-@TestConfiguration
-@org.springframework.context.annotation.Profile("test")
-public class TestRedisConfiguration {
-
-    private final RedisServer redisServer;
-
-    public TestRedisConfiguration() {
-        this.redisServer = new RedisServer();
-    }
-
-    @PostConstruct
-    public void postConstruct() {
-        redisServer.start();
-    }
-
-    @PreDestroy
-    public void preDestroy() {
-        redisServer.stop();
-    }
+@Configuration
+@org.springframework.context.annotation.Profile("!test")
+public class RedisConfig {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
