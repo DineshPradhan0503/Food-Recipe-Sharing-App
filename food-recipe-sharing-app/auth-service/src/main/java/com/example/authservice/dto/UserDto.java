@@ -5,9 +5,20 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 public class UserDto {
+    @NotBlank(message = "Username is required")
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
+    private String username;
     @Email(message = "Email should be valid")
     private String email;
     @NotBlank(message = "Password is required")
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
     @Size(min = 6, max = 40, message = "Password must be between 6 and 40 characters")
     private String password;
     private String roles;

@@ -20,6 +20,7 @@ public class UserService {
 
     public UserProfile updateUserProfile(String email, UserProfileDto userProfileDto) {
         UserProfile userProfile = userProfileRepository.findByEmail(email).orElse(new UserProfile());
+        userProfile.setUsername(userProfileDto.getUsername());
         userProfile.setEmail(email);
         userProfile.setBio(userProfileDto.getBio());
         return userProfileRepository.save(userProfile);

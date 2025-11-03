@@ -40,6 +40,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Email is already taken");
         }
         User newUser = new User();
+        newUser.setUsername(userDto.getUsername());
         newUser.setEmail(userDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         newUser.setRoles(userDto.getRoles());
