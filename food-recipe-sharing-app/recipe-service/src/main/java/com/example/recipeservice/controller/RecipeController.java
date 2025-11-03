@@ -6,6 +6,7 @@ import com.example.recipeservice.service.RecipeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,8 +33,6 @@ public class RecipeController {
         return ResponseEntity.ok(recipe);
     }
 
-import javax.validation.Valid;
-//...
     @PostMapping
     public Recipe createRecipe(@Valid @RequestBody RecipeDto recipeDto) {
         return recipeService.createRecipe(recipeDto);

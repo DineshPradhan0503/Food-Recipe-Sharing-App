@@ -5,6 +5,7 @@ import com.example.interactionservice.model.Interaction;
 import com.example.interactionservice.service.InteractionService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,8 +23,6 @@ public class InteractionController {
         return interactionService.getInteractionsForRecipe(recipeId);
     }
 
-import javax.validation.Valid;
-//...
     @PostMapping
     public Interaction createInteraction(@Valid @RequestBody InteractionDto interactionDto) {
         return interactionService.createInteraction(interactionDto);

@@ -6,6 +6,8 @@ import com.example.userservice.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -25,8 +27,6 @@ public class UserController {
         return ResponseEntity.ok(userProfile);
     }
 
-import javax.validation.Valid;
-//...
     @PutMapping("/{username}")
     public ResponseEntity<UserProfile> updateUserProfile(@PathVariable String username, @Valid @RequestBody UserProfileDto userProfileDto) {
         return ResponseEntity.ok(userService.updateUserProfile(username, userProfileDto));
