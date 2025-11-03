@@ -3,15 +3,15 @@ package com.example.recipeservice.dto;
 import javax.validation.constraints.NotBlank;
 
 public class RecipeDto {
-    @NotBlank
+    @NotBlank(message = "Title is required")
     private String title;
-    @NotBlank
+    @NotBlank(message = "Description is required")
     private String description;
-    @NotBlank
+    @NotBlank(message = "Ingredients are required")
     private String ingredients;
-    @NotBlank
+    @NotBlank(message = "Instructions are required")
     private String instructions;
-    @NotBlank
+    @NotBlank(message = "Author is required")
     private String author;
 
     public String getTitle() {

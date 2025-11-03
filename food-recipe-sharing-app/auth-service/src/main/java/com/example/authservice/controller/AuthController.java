@@ -30,17 +30,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
-        final String jwt = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        final String jwt = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok(new JwtResponse(jwt, "Login successful"));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) throws Exception {
-        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username is already taken");
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email is already taken");
         }
         User newUser = new User();
-        newUser.setUsername(userDto.getUsername());
+        newUser.setEmail(userDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         newUser.setRoles(userDto.getRoles());
         return ResponseEntity.ok(userRepository.save(newUser));

@@ -28,11 +28,11 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public String login(String username, String password) throws Exception {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new Exception("User not found"));
+    public String login(String email, String password) throws Exception {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User not found with email: " + email));
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new Exception("Invalid credentials");
+            throw new Exception("Invalid password");
         }
         return generateToken(user);
     }
@@ -42,7 +42,7 @@ public class AuthService {
         claims.put("roles", user.getRoles());
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(user.getUsername())
+                .setSubject(user.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS512, secret)

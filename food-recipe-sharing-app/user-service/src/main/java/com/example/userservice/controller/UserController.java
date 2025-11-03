@@ -18,17 +18,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<UserProfile> getUserProfile(@PathVariable String username) {
-        UserProfile userProfile = userService.getUserProfile(username);
+    @GetMapping("/{email}")
+    public ResponseEntity<UserProfile> getUserProfile(@PathVariable String email) {
+        UserProfile userProfile = userService.getUserProfile(email);
         if (userProfile == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userProfile);
     }
 
-    @PutMapping("/{username}")
-    public ResponseEntity<UserProfile> updateUserProfile(@PathVariable String username, @Valid @RequestBody UserProfileDto userProfileDto) {
-        return ResponseEntity.ok(userService.updateUserProfile(username, userProfileDto));
+    @PutMapping("/{email}")
+    public ResponseEntity<UserProfile> updateUserProfile(@PathVariable String email, @Valid @RequestBody UserProfileDto userProfileDto) {
+        return ResponseEntity.ok(userService.updateUserProfile(email, userProfileDto));
     }
 }

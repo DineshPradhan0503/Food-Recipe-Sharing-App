@@ -13,7 +13,10 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-                .csrf().disable();
+                .csrf().disable()
+                .authorizeExchange()
+                .pathMatchers("/auth/**").permitAll()
+                .anyExchange().authenticated();
         return http.build();
     }
 }

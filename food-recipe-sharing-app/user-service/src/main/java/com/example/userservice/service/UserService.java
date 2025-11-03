@@ -14,14 +14,13 @@ public class UserService {
         this.userProfileRepository = userProfileRepository;
     }
 
-    public UserProfile getUserProfile(String username) {
-        return userProfileRepository.findByUsername(username).orElse(null);
+    public UserProfile getUserProfile(String email) {
+        return userProfileRepository.findByEmail(email).orElse(null);
     }
 
-    public UserProfile updateUserProfile(String username, UserProfileDto userProfileDto) {
-        UserProfile userProfile = userProfileRepository.findByUsername(username).orElse(new UserProfile());
-        userProfile.setUsername(username);
-        userProfile.setEmail(userProfileDto.getEmail());
+    public UserProfile updateUserProfile(String email, UserProfileDto userProfileDto) {
+        UserProfile userProfile = userProfileRepository.findByEmail(email).orElse(new UserProfile());
+        userProfile.setEmail(email);
         userProfile.setBio(userProfileDto.getBio());
         return userProfileRepository.save(userProfile);
     }

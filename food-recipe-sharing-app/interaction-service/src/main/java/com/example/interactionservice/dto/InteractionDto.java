@@ -5,11 +5,11 @@ import com.example.interactionservice.model.InteractionType;
 import javax.validation.constraints.NotNull;
 
 public class InteractionDto {
-    @NotNull
+    @NotNull(message = "Recipe ID is required")
     private Long recipeId;
-    @NotNull
+    @NotNull(message = "Username is required")
     private String username;
-    @NotNull
+    @NotNull(message = "Interaction type is required")
     private InteractionType type;
     private String content;
 
