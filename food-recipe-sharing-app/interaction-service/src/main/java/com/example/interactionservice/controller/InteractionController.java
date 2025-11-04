@@ -21,13 +21,13 @@ public class InteractionController {
 
     @GetMapping("/recipe/{recipeId}")
     public List<Interaction> getInteractionsForRecipe(@PathVariable Long recipeId, @RequestHeader("Authorization") String token) {
-        SecurityUtil.ensureUser(token);
+        SecurityUtil.ensureCustomer(token);
         return interactionService.getInteractionsForRecipe(recipeId);
     }
 
     @PostMapping
     public Interaction createInteraction(@Valid @RequestBody InteractionDto interactionDto, @RequestHeader("Authorization") String token) {
-        SecurityUtil.ensureUser(token);
+        SecurityUtil.ensureCustomer(token);
         return interactionService.createInteraction(interactionDto);
     }
 }

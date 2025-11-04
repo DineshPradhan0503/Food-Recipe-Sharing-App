@@ -22,13 +22,13 @@ public class RecipeController {
 
     @GetMapping
     public List<Recipe> getAllRecipes(@RequestHeader("Authorization") String token) {
-        SecurityUtil.ensureUser(token);
+        SecurityUtil.ensureCustomer(token);
         return recipeService.getAllRecipes();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
-        SecurityUtil.ensureUser(token);
+        SecurityUtil.ensureCustomer(token);
         Recipe recipe = recipeService.getRecipeById(id);
         if (recipe == null) {
             return ResponseEntity.notFound().build();
@@ -38,13 +38,13 @@ public class RecipeController {
 
     @PostMapping
     public Recipe createRecipe(@Valid @RequestBody RecipeDto recipeDto, @RequestHeader("Authorization") String token) {
-        SecurityUtil.ensureUser(token);
+        SecurityUtil.ensureCustomer(token);
         return recipeService.createRecipe(recipeDto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDto recipeDto, @RequestHeader("Authorization") String token) {
-        SecurityUtil.ensureUser(token);
+        SecurityUtil.ensureCustomer(token);
         Recipe updatedRecipe = recipeService.updateRecipe(id, recipeDto);
         if (updatedRecipe == null) {
             return ResponseEntity.notFound().build();

@@ -45,7 +45,7 @@ public class AuthController {
         newUser.setUsername(userDto.getUsername());
         newUser.setEmail(userDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        newUser.setRoles(Collections.singletonList("USER"));
+        newUser.setRoles(Collections.singletonList("CUSTOMER"));
         return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", userRepository.save(newUser)));
     }
 }

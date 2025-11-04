@@ -54,9 +54,9 @@ public class AuthenticationFilter implements GatewayFilter {
                 if (!roles.contains("ADMIN")) {
                     return onError(exchange, HttpStatus.FORBIDDEN, "User does not have admin role");
                 }
-            } else if (routerValidator.isUser.test(request)) {
-                if (!roles.contains("USER")) {
-                    return onError(exchange, HttpStatus.FORBIDDEN, "User does not have user role");
+            } else if (routerValidator.isCustomer.test(request)) {
+                if (!roles.contains("CUSTOMER") && !roles.contains("ADMIN")) {
+                    return onError(exchange, HttpStatus.FORBIDDEN, "User must have CUSTOMER or ADMIN role");
                 }
             }
         }

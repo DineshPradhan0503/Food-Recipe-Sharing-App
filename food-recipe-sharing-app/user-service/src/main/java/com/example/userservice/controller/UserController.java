@@ -24,6 +24,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserProfile>> getCurrentUserProfile(@RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureCustomer(token);
         String email = JwtUtil.extractEmail(token);
         UserProfile userProfile = userService.getUserProfile(email);
         return ResponseEntity.ok(new ApiResponse<>(true, "User profile retrieved successfully", userProfile));
@@ -31,6 +32,7 @@ public class UserController {
 
     @PutMapping("/profile")
     public ResponseEntity<ApiResponse<UserProfile>> updateCurrentUserProfile(@RequestHeader("Authorization") String token, @Valid @RequestBody UserProfileDto userProfileDto) {
+        SecurityUtil.ensureCustomer(token);
         String email = JwtUtil.extractEmail(token);
         return ResponseEntity.ok(new ApiResponse<>(true, "User profile updated successfully", userService.updateUserProfile(email, userProfileDto)));
     }

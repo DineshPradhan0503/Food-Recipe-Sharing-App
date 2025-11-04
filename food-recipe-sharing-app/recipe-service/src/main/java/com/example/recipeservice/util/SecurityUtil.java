@@ -15,10 +15,10 @@ public class SecurityUtil {
         }
     }
 
-    public static void ensureUser(String token) {
+    public static void ensureCustomer(String token) {
         List<String> roles = JwtUtil.extractRoles(token);
-        if (roles == null || !roles.contains("USER")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. User privileges required.");
+        if (roles == null || !roles.contains("CUSTOMER")) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. Customer privileges required.");
         }
     }
 }

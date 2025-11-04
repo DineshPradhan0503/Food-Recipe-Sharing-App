@@ -14,7 +14,7 @@ public class RouterValidator {
             "/auth/login"
     );
 
-    public static final List<String> userEndpoints = List.of(
+    public static final List<String> customerEndpoints = List.of(
             "/users/profile",
             "/recipes",
             "/interactions"
@@ -29,8 +29,8 @@ public class RouterValidator {
             request -> publicEndpoints.stream()
                     .noneMatch(uri -> request.getURI().getPath().startsWith(uri));
 
-    public Predicate<ServerHttpRequest> isUser =
-            request -> userEndpoints.stream()
+    public Predicate<ServerHttpRequest> isCustomer =
+            request -> customerEndpoints.stream()
                     .anyMatch(uri -> request.getURI().getPath().startsWith(uri));
 
     public Predicate<ServerHttpRequest> isAdmin =
