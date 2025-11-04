@@ -3,8 +3,8 @@ package com.example.recipeservice.controller;
 import com.example.recipeservice.dto.RecipeDto;
 import com.example.recipeservice.model.Recipe;
 import com.example.recipeservice.service.RecipeService;
+import com.example.recipeservice.util.SecurityUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,12 +21,14 @@ public class RecipeController {
     }
 
     @GetMapping
-    public List<Recipe> getAllRecipes() {
+    public List<Recipe> getAllRecipes(@RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureUser(token);
         return recipeService.getAllRecipes();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
+    public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureUser(token);
         Recipe recipe = recipeService.getRecipeById(id);
         if (recipe == null) {
             return ResponseEntity.notFound().build();
@@ -35,14 +37,14 @@ public class RecipeController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public Recipe createRecipe(@Valid @RequestBody RecipeDto recipeDto) {
+    public Recipe createRecipe(@Valid @RequestBody RecipeDto recipeDto, @RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureUser(token);
         return recipeService.createRecipe(recipeDto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @recipeService.getRecipeById(#id).author == authentication.principal")
-    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDto recipeDto) {
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDto recipeDto, @RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureUser(token);
         Recipe updatedRecipe = recipeService.updateRecipe(id, recipeDto);
         if (updatedRecipe == null) {
             return ResponseEntity.notFound().build();
@@ -51,8 +53,8 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @recipeService.getRecipeById(#id).author == authentication.principal")
-    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureAdmin(token);
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
     }

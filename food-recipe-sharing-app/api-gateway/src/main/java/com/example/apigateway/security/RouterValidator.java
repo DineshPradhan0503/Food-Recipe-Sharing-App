@@ -15,9 +15,9 @@ public class RouterValidator {
     );
 
     public static final List<String> userEndpoints = List.of(
-        "/users/profile",
-        "/recipes",
-        "/interactions"
+            "/users/profile",
+            "/recipes",
+            "/interactions"
     );
 
     public static final List<String> adminEndpoints = List.of(
@@ -27,13 +27,13 @@ public class RouterValidator {
 
     public Predicate<ServerHttpRequest> isSecured =
             request -> publicEndpoints.stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+                    .noneMatch(uri -> request.getURI().getPath().startsWith(uri));
 
     public Predicate<ServerHttpRequest> isUser =
             request -> userEndpoints.stream()
-                    .anyMatch(uri -> request.getURI().getPath().contains(uri));
+                    .anyMatch(uri -> request.getURI().getPath().startsWith(uri));
 
     public Predicate<ServerHttpRequest> isAdmin =
             request -> adminEndpoints.stream()
-                    .anyMatch(uri -> request.getURI().getPath().contains(uri));
+                    .anyMatch(uri -> request.getURI().getPath().startsWith(uri));
 }

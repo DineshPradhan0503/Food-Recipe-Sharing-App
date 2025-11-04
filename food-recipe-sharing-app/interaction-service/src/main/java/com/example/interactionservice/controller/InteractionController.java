@@ -3,7 +3,7 @@ package com.example.interactionservice.controller;
 import com.example.interactionservice.dto.InteractionDto;
 import com.example.interactionservice.model.Interaction;
 import com.example.interactionservice.service.InteractionService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.example.interactionservice.util.SecurityUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,13 +20,14 @@ public class InteractionController {
     }
 
     @GetMapping("/recipe/{recipeId}")
-    public List<Interaction> getInteractionsForRecipe(@PathVariable Long recipeId) {
+    public List<Interaction> getInteractionsForRecipe(@PathVariable Long recipeId, @RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureUser(token);
         return interactionService.getInteractionsForRecipe(recipeId);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public Interaction createInteraction(@Valid @RequestBody InteractionDto interactionDto) {
+    public Interaction createInteraction(@Valid @RequestBody InteractionDto interactionDto, @RequestHeader("Authorization") String token) {
+        SecurityUtil.ensureUser(token);
         return interactionService.createInteraction(interactionDto);
     }
 }
