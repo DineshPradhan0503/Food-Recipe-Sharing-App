@@ -4,6 +4,7 @@ import com.example.recipeservice.dto.RecipeDto;
 import com.example.recipeservice.model.Recipe;
 import com.example.recipeservice.service.RecipeService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,11 +35,13 @@ public class RecipeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CUSTOMER')")
     public Recipe createRecipe(@Valid @RequestBody RecipeDto recipeDto) {
         return recipeService.createRecipe(recipeDto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @recipeService.getRecipeById(#id).author == authentication.principal")
     public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDto recipeDto) {
         Recipe updatedRecipe = recipeService.updateRecipe(id, recipeDto);
         if (updatedRecipe == null) {
@@ -48,6 +51,7 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @recipeService.getRecipeById(#id).author == authentication.principal")
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();

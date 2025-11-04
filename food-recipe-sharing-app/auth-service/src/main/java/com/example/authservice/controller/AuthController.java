@@ -1,5 +1,6 @@
 package com.example.authservice.controller;
 
+import com.example.authservice.dto.ApiResponse;
 import com.example.authservice.dto.JwtResponse;
 import com.example.authservice.dto.LoginRequest;
 import com.example.authservice.dto.UserDto;
@@ -29,21 +30,21 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<ApiResponse<?>> createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
         final String jwt = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(new JwtResponse(jwt, "Login successful"));
+        return ResponseEntity.ok(new ApiResponse<>(true, "Login successful", new JwtResponse(jwt, "Login successful")));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) throws Exception {
+    public ResponseEntity<ApiResponse<?>> saveUser(@Valid @RequestBody UserDto userDto) throws Exception {
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email is already taken");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Email is already taken", null));
         }
         User newUser = new User();
         newUser.setUsername(userDto.getUsername());
         newUser.setEmail(userDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         newUser.setRoles(userDto.getRoles());
-        return ResponseEntity.ok(userRepository.save(newUser));
+        return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", userRepository.save(newUser)));
     }
 }

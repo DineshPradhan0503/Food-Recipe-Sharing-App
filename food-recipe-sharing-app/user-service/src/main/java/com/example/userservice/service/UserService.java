@@ -25,4 +25,20 @@ public class UserService {
         userProfile.setBio(userProfileDto.getBio());
         return userProfileRepository.save(userProfile);
     }
+
+    public UserProfile createUserProfile(UserProfileDto userProfileDto) {
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUsername(userProfileDto.getUsername());
+        userProfile.setEmail(userProfileDto.getEmail());
+        userProfile.setBio(userProfileDto.getBio());
+        return userProfileRepository.save(userProfile);
+    }
+
+    public void deleteUserProfile(String email) {
+        userProfileRepository.findByEmail(email).ifPresent(userProfileRepository::delete);
+    }
+
+    public java.util.List<UserProfile> getAllProfiles() {
+        return userProfileRepository.findAll();
+    }
 }
