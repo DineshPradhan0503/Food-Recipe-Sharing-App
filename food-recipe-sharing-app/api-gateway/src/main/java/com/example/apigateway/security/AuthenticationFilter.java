@@ -54,8 +54,6 @@ public class AuthenticationFilter implements GatewayFilter {
                     return onError(exchange, HttpStatus.FORBIDDEN, "User does not have admin role");
                 }
             }
-
-            populateRequestWithHeaders(exchange, token);
         }
         return chain.filter(exchange);
     }
@@ -88,17 +86,5 @@ public class AuthenticationFilter implements GatewayFilter {
         } catch (JsonProcessingException e) {
             return response.setComplete();
         }
-    }
-
-    private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
-        Long userId = jwtUtil.getUserId(token);
-        String username = jwtUtil.getUsername(token);
-        List<String> roles = jwtUtil.getRoles(token);
-
-        exchange.getRequest().mutate()
-                .header("X-User-ID", String.valueOf(userId))
-                .header("X-User-Email", username)
-                .header("X-User-Roles", String.join(",", roles))
-                .build();
     }
 }
