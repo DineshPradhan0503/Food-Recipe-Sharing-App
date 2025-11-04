@@ -48,10 +48,15 @@ public class AuthenticationFilter implements GatewayFilter {
                 return onError(exchange, HttpStatus.UNAUTHORIZED, "Token is invalid or expired");
             }
 
+            List<String> roles = jwtUtil.getRoles(token);
+
             if (routerValidator.isAdmin.test(request)) {
-                List<String> roles = jwtUtil.getRoles(token);
                 if (!roles.contains("ADMIN")) {
                     return onError(exchange, HttpStatus.FORBIDDEN, "User does not have admin role");
+                }
+            } else if (routerValidator.isUser.test(request)) {
+                if (!roles.contains("USER")) {
+                    return onError(exchange, HttpStatus.FORBIDDEN, "User does not have user role");
                 }
             }
         }

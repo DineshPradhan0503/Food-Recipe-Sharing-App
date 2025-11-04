@@ -1,6 +1,7 @@
 package com.example.authservice.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -10,7 +11,9 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private String roles;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 
     public Long getId() {
         return id;
@@ -44,11 +47,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/auth")
@@ -44,7 +45,7 @@ public class AuthController {
         newUser.setUsername(userDto.getUsername());
         newUser.setEmail(userDto.getEmail());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        newUser.setRoles(userDto.getRoles());
+        newUser.setRoles(Collections.singletonList("USER"));
         return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", userRepository.save(newUser)));
     }
 }

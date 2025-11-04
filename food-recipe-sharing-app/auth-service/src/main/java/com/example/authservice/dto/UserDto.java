@@ -3,6 +3,7 @@ package com.example.authservice.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 public class UserDto {
     @NotBlank(message = "Username is required")
@@ -11,6 +12,9 @@ public class UserDto {
     @Email(message = "Email should be valid")
     private String email;
     @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 40, message = "Password must be between 6 and 40 characters")
+    private String password;
+    private List<String> roles;
 
     public String getUsername() {
         return username;
@@ -19,9 +23,6 @@ public class UserDto {
     public void setUsername(String username) {
         this.username = username;
     }
-    @Size(min = 6, max = 40, message = "Password must be between 6 and 40 characters")
-    private String password;
-    private String roles;
 
     public String getEmail() {
         return email;
@@ -39,11 +40,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public String getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 }
