@@ -2,30 +2,20 @@ package com.example.authservice.service;
 
 import com.example.authservice.model.User;
 import com.example.authservice.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.authservice.security.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Value("${jwt.secret}")
-    private String secret;
-
-    @Value("${jwt.expiration}")
-    private Long expiration;
-
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     public String login(String email, String password) throws Exception {
@@ -34,18 +24,6 @@ public class AuthService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new Exception("Invalid password");
         }
-        return generateToken(user);
-    }
-
-    private String generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", user.getRoles());
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(user.getEmail())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
+        return jwtUtil.generateToken(user);
     }
 }

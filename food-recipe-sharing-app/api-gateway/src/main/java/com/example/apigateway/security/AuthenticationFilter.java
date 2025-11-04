@@ -2,6 +2,7 @@ package com.example.apigateway.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtException;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +44,8 @@ public class AuthenticationFilter implements GatewayFilter {
 
             try {
                 jwtUtil.validateToken(token);
-            } catch (RuntimeException e) {
-                return onError(exchange, HttpStatus.UNAUTHORIZED, e.getMessage());
+            } catch (JwtException e) {
+                return onError(exchange, HttpStatus.UNAUTHORIZED, "Token is invalid or expired");
             }
 
             if (routerValidator.isAdmin.test(request)) {
