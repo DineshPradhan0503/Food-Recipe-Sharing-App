@@ -2,14 +2,12 @@ package com.example.trendingservice.kafka;
 
 import com.example.trendingservice.dto.InteractionDto;
 import com.example.trendingservice.dto.RecipeDto;
-import com.example.trendingservice.service.TrendingService;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -23,17 +21,11 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    private final TrendingService trendingService;
-
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
-
-    public KafkaConsumerConfig(TrendingService trendingService) {
-        this.trendingService = trendingService;
-    }
 
     private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> dtoClass) {
         Map<String, Object> props = new HashMap<>();
@@ -69,15 +61,5 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, InteractionDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(interactionConsumerFactory());
         return factory;
-    }
-
-    @KafkaListener(topics = "new-recipes", containerFactory = "recipeListenerContainerFactory")
-    public void listenNewRecipes(RecipeDto recipe) {
-        trendingService.updateTrendingScore(recipe.getId(), 1);
-    }
-
-    @KafkaListener(topics = "interactions", containerFactory = "interactionListenerContainerFactory")
-    public void listenInteractions(InteractionDto interaction) {
-        trendingService.updateTrendingScore(interaction.getRecipeId(), 0.5);
     }
 }
