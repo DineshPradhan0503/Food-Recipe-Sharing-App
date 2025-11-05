@@ -17,8 +17,8 @@ public class SecurityUtil {
 
     public static void ensureCustomer(String token) {
         List<String> roles = JwtUtil.extractRoles(token);
-        if (roles == null || !roles.contains("CUSTOMER")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. Customer privileges required.");
+        if (roles == null || (!roles.contains("CUSTOMER") && !roles.contains("ADMIN"))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. Customer or Admin privileges required.");
         }
     }
 }
