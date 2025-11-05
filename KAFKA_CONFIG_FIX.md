@@ -1,3 +1,22 @@
+# Kafka Configuration Error: Analysis and Fix
+
+## 1. The Problem: Why `.getConfiguration()` Fails
+
+The error `The method getConfiguration() is undefined for the type ConsumerFactory` occurs because you are trying to call a method that belongs to a specific implementation (`DefaultKafkaConsumerFactory`) on an interface (`ConsumerFactory`).
+
+-   The `consumerFactory()` method in your original code returned a `ConsumerFactory<String, Object>`.
+-   While the actual object returned was a `DefaultKafkaConsumerFactory`, the reference is of the interface type, which does not have the `.getConfiguration()` method.
+-   This approach is also not type-safe, as it requires casting and manual configuration, which can lead to runtime errors.
+
+## 2. The Solution: Type-Safe, Multi-Factory Configuration
+
+The correct and recommended approach is to create separate, strongly-typed consumer factories for each message type (DTO). This is more robust, easier to maintain, and eliminates the error.
+
+### a. The Corrected `KafkaConsumerConfig.java`
+
+This new configuration uses a private helper method (`createConsumerFactory`) to build a strongly-typed `ConsumerFactory` for any given DTO class. It then creates a separate `ConcurrentKafkaListenerContainerFactory` for each message type.
+
+```java
 package com.example.trendingservice.kafka;
 
 import com.example.trendingservice.dto.InteractionDto;
@@ -81,3 +100,22 @@ public class KafkaConsumerConfig {
         trendingService.updateTrendingScore(interaction.getRecipeId(), 0.5);
     }
 }
+```
+
+### b. The Corrected `application.properties`
+
+The deserializer properties have been removed from the properties file, as they are now handled in the `KafkaConsumerConfig`.
+
+```properties
+server.port=8085
+
+spring.application.name=trending-service
+
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
+spring.redis.host=localhost
+spring.redis.port=6379
+
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.consumer.group-id=trending-group
+```
